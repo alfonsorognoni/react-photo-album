@@ -30,7 +30,7 @@ const chunkPhotos = <T extends Photo = Photo>(photos: T[], size: number, offset:
         result.push(photos.slice(Math.max(i - size, 0), i));
     }
 
-    return result;
+    return result.reverse();
 };
 
 const RowsLayout = <T extends Photo = Photo>(props: RowsLayoutProps<T>): JSX.Element => {
