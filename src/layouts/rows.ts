@@ -77,7 +77,7 @@ const makeGetNeighbors =
         return results;
     };
 
-type RowsLayoutModel<T extends Photo = Photo> = { photo: T; layout: PhotoLayout }[][] | undefined;
+export type RowsLayoutModel<T extends Photo = Photo> = { photo: T; layout: PhotoLayout }[][] | undefined;
 
 const computeRowsLayout = <T extends Photo = Photo>({
     photos,

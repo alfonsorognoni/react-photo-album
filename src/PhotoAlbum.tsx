@@ -65,6 +65,7 @@ const PhotoAlbum = <T extends Photo>(props: PhotoAlbumProps<T>): JSX.Element => 
         resizeObserverProvider,
         breakpoints,
         instrumentation,
+        pagination,
     } = props;
 
     const [mounted, setMounted] = useState(false);
@@ -83,7 +84,7 @@ const PhotoAlbum = <T extends Photo>(props: PhotoAlbumProps<T>): JSX.Element => 
 
     const componentsProps = resolveComponentsProps(props.componentsProps, layoutOptions.containerWidth);
 
-    const commonLayoutProps = { photos, renderPhoto, componentsProps, instrumentation };
+    const commonLayoutProps = { photos, renderPhoto, componentsProps, instrumentation, pagination };
 
     return (
         <ContainerRenderer

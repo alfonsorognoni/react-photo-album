@@ -1,8 +1,8 @@
 {
-    "name": "react-photo-album",
-    "version": "0.0.0-semantic-release",
+    "name": "@scissorhands/react-photo-album",
+    "version": "v0.0.1",
     "description": "Responsive photo gallery component for React",
-    "author": "Igor Danchenko",
+    "author": "Alfonso Rognoni",
     "license": "MIT",
     "types": "dist/index.d.ts",
     "main": "dist/index.cjs.js",
@@ -16,13 +16,12 @@
         "require": "./dist/index.cjs.js"
     },
     "sideEffects": false,
-    "homepage": "https://react-photo-album.com",
     "repository": {
         "type": "git",
-        "url": "https://github.com/igordanchenko/react-photo-album.git"
+        "url": "https://github.com/alfonsorognoni/react-photo-album.git"
     },
     "bugs": {
-        "url": "https://github.com/igordanchenko/react-photo-album/issues"
+        "url": "https://github.com/alfonsorognoni/react-photo-album/issues"
     },
     "engines": {
         "node": ">=12"
