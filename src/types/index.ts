@@ -18,10 +18,9 @@ export type ResponsiveParameterProvider<T = number> = (containerWidth: number) =
 
 export type ResponsiveParameter<T = number> = T | ResponsiveParameterProvider<T>;
 
-export type PaginationProps = {
+export type PaginationSliceProps = {
     limit: number;
-    offset: number;
-};
+}[];
 
 export type ResponsiveSizes = {
     /** default size e.g. 100vw or calc(100vw - 200px) */
@@ -125,7 +124,7 @@ export type PhotoAlbumProps<T extends Photo = Photo> = {
     resizeObserverProvider?: ResizeObserverProvider;
     /** Internal instrumentation - use on your own risk. */
     instrumentation?: Instrumentation;
-    pagination?: PaginationProps;
+    pagination?: PaginationSliceProps;
 };
 
 export type RenderPhoto<T extends Photo = Photo> = (props: PhotoProps<T>) => ReactNode;

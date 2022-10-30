@@ -4,7 +4,7 @@ import RowContainerRenderer from "../renderers/RowContainerRenderer";
 import {
     ComponentsProps,
     Instrumentation,
-    PaginationProps,
+    PaginationSliceProps,
     Photo,
     RenderPhoto,
     RenderRowContainer,
@@ -19,38 +19,36 @@ type RowsLayoutProps<T extends Photo = Photo> = {
     renderRowContainer?: RenderRowContainer;
     componentsProps?: ComponentsProps;
     instrumentation?: Instrumentation;
-    pagination?: PaginationProps;
+    pagination?: PaginationSliceProps;
 };
 
 //
-const chunkPhotos = <T extends Photo = Photo>(photos: T[], size: number, offset: number) => {
+const chunkPhotos = <T extends Photo = Photo>(photos: T[], pagination: PaginationSliceProps) => {
     const result = [];
-    for (let index = offset; index >= 1; index--) {
-        const start = index * size;
-        const end = size;
-
-        if (index === 1) {
-            result.push(photos.slice(0, -end * (offset - 1)));
-        } else {
-            result.push(photos.slice(-start, -end * (index - 1)));
+    const totalPages = pagination.length;
+    if (totalPages === 1) {
+        result.push(photos);
+    } else {
+        for (let i = 0; i < totalPages; i++) {
+            const start = i > 0 ? pagination[i - 1].limit : 0;
+            const end = i > 0 ? pagination[i - 1].limit + pagination[i].limit : pagination[i].limit;
+            result.push(photos.slice(start, end));
         }
     }
-    return result.reverse();
+    return result;
 };
 
 const RowsLayout = <T extends Photo = Photo>(props: RowsLayoutProps<T>): JSX.Element => {
     const { photos, layoutOptions, renderPhoto, renderRowContainer, componentsProps, instrumentation, pagination } =
         props;
 
-    const { limit, offset } = pagination || {};
-
     const rows = useMemo(() => {
-        const chunks = limit && offset && offset > 1 ? chunkPhotos(photos, limit, offset) : [photos];
+        const chunks = pagination?.length ? chunkPhotos(photos, pagination) : [photos];
         return chunks.reduce((acc, photos) => {
             const rows = computeRowsLayout<T>({ photos, layoutOptions, instrumentation });
             return [...(acc as []), ...(rows || []).map((row) => row)];
         }, [] as RowsLayoutModel<T>);
-    }, [limit, offset, photos, layoutOptions, instrumentation]);
+    }, [pagination, photos, layoutOptions, instrumentation]);
 
     if (rows === undefined) return <></>;
 
