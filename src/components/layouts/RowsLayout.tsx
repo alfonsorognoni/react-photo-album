@@ -24,12 +24,17 @@ type RowsLayoutProps<T extends Photo = Photo> = {
 
 //
 const chunkPhotos = <T extends Photo = Photo>(photos: T[], size: number, offset: number) => {
-    // chunk an array into smaller arrays of a given size and offset (for pagination) starting from the end and working backwards (for masonry)
     const result = [];
-    for (let i = photos.length - offset; i > 0; i -= size) {
-        result.push(photos.slice(Math.max(i - size, 0), i));
-    }
+    for (let index = offset; index >= 1; index--) {
+        const start = index * size;
+        const end = size;
 
+        if (index === 1) {
+            result.push(photos.slice(-end * offset - 1));
+        } else {
+            result.push(photos.slice(start, end));
+        }
+    }
     return result.reverse();
 };
 
@@ -40,7 +45,7 @@ const RowsLayout = <T extends Photo = Photo>(props: RowsLayoutProps<T>): JSX.Ele
     const { limit, offset } = pagination || {};
 
     const rows = useMemo(() => {
-        const chunks = limit && offset ? chunkPhotos(photos, limit, offset) : [photos];
+        const chunks = limit && offset && offset > 1 ? chunkPhotos(photos, limit, offset) : [photos];
         return chunks.reduce((acc, photos) => {
             const rows = computeRowsLayout<T>({ photos, layoutOptions, instrumentation });
             return [...(acc as []), ...(rows || []).map((row) => row)];
