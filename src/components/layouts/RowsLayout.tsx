@@ -42,8 +42,8 @@ const RowsLayout = <T extends Photo = Photo>(props: RowsLayoutProps<T>): JSX.Ele
     const rows = useMemo(() => {
         const chunks = limit && offset ? chunkPhotos(photos, limit, offset) : [photos];
         return chunks.reduce((acc, photos) => {
-            const rows = computeRowsLayout({ photos, layoutOptions, instrumentation });
-            return [...(acc as []), ...(rows as [])];
+            const rows = computeRowsLayout<T>({ photos, layoutOptions, instrumentation });
+            return [...(acc as []), ...(rows || []).map((row) => row)];
         }, [] as RowsLayoutModel<T>);
     }, [limit, offset, photos, layoutOptions, instrumentation]);
 
