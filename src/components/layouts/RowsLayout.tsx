@@ -30,9 +30,9 @@ const chunkPhotos = <T extends Photo = Photo>(photos: T[], size: number, offset:
         const end = size;
 
         if (index === 1) {
-            result.push(photos.slice(-end * offset - 1));
+            result.push(photos.slice(0, -end * (offset - 1)));
         } else {
-            result.push(photos.slice(start, end));
+            result.push(photos.slice(-start, -end * (index - 1)));
         }
     }
     return result.reverse();
