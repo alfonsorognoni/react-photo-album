@@ -170,7 +170,7 @@ type ComputeColumnsLayoutProps<T extends Photo = Photo> = {
     instrumentation?: Instrumentation;
 };
 
-type ColumnsLayoutModel<T extends Photo = Photo> =
+export type ColumnsLayoutModel<T extends Photo = Photo> =
     | {
           columnsModel: { photo: T; layout: PhotoLayout }[][];
           columnsRatios: number[];

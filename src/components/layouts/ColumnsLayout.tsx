@@ -1,14 +1,17 @@
-import computeColumnsLayout from "../../layouts/columns";
+import computeColumnsLayout, { ColumnsLayoutModel } from "../../layouts/columns";
 import PhotoRenderer from "../renderers/PhotoRenderer";
 import ColumnContainerRenderer from "../renderers/ColumnContainerRenderer";
 import {
     ColumnsLayoutOptions,
     ComponentsProps,
     Instrumentation,
+    PaginationSliceProps,
     Photo,
     RenderColumnContainer,
     RenderPhoto,
 } from "../../types";
+import { useMemo } from "react";
+import chunkPhotos from "../../utils/chunkPhotos";
 
 type ColumnsLayoutProps<T extends Photo = Photo> = {
     photos: T[];
@@ -17,16 +20,32 @@ type ColumnsLayoutProps<T extends Photo = Photo> = {
     renderColumnContainer?: RenderColumnContainer;
     componentsProps?: ComponentsProps;
     instrumentation?: Instrumentation;
+    pagination?: PaginationSliceProps;
 };
 
 const ColumnsLayout = <T extends Photo = Photo>(props: ColumnsLayoutProps<T>): JSX.Element => {
-    const { photos, layoutOptions, renderPhoto, renderColumnContainer, componentsProps, instrumentation } = props;
+    const { photos, layoutOptions, renderPhoto, renderColumnContainer, componentsProps, instrumentation, pagination } =
+        props;
 
-    const columnsLayout = computeColumnsLayout({ photos, layoutOptions, instrumentation });
+    const columns = useMemo(() => {
+        const chunks = pagination?.length ? chunkPhotos(photos, pagination) : [photos];
+        return chunks.reduce((acc, photos) => {
+            const columnsLayout = computeColumnsLayout<T>({
+                photos,
+                layoutOptions,
+                instrumentation,
+            });
+            return {
+                columnsModel: [...(acc?.columnsModel as []), ...(columnsLayout?.columnsModel || [])],
+                columnsRatios: [...(acc?.columnsRatios as []), ...(columnsLayout?.columnsRatios as [])],
+                columnsGaps: [...(acc?.columnsGaps as []), ...(columnsLayout?.columnsGaps as [])],
+            };
+        }, {} as ColumnsLayoutModel<T>);
+    }, [pagination, photos, layoutOptions, instrumentation]);
 
-    if (columnsLayout === undefined) return <></>;
+    if (columns === undefined) return <></>;
 
-    const { columnsModel, columnsRatios, columnsGaps } = columnsLayout;
+    const { columnsModel, columnsRatios, columnsGaps } = columns;
 
     return (
         <>

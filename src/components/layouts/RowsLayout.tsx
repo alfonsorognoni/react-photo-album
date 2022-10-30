@@ -11,6 +11,7 @@ import {
     RowsLayoutOptions,
 } from "../../types";
 import { useMemo } from "react";
+import chunkPhotos from "../../utils/chunkPhotos";
 
 type RowsLayoutProps<T extends Photo = Photo> = {
     photos: T[];
@@ -20,22 +21,6 @@ type RowsLayoutProps<T extends Photo = Photo> = {
     componentsProps?: ComponentsProps;
     instrumentation?: Instrumentation;
     pagination?: PaginationSliceProps;
-};
-
-//
-const chunkPhotos = <T extends Photo = Photo>(photos: T[], pagination: PaginationSliceProps) => {
-    const result = [];
-    const totalPages = pagination.length;
-    if (totalPages === 1) {
-        result.push(photos);
-    } else {
-        for (let i = 0; i < totalPages; i++) {
-            const start = i > 0 ? pagination[i - 1].limit : 0;
-            const end = i > 0 ? pagination[i - 1].limit + pagination[i].limit : pagination[i].limit;
-            result.push(photos.slice(start, end));
-        }
-    }
-    return result;
 };
 
 const RowsLayout = <T extends Photo = Photo>(props: RowsLayoutProps<T>): JSX.Element => {
