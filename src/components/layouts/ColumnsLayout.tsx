@@ -39,12 +39,12 @@ const ColumnsLayout = <T extends Photo = Photo>(props: ColumnsLayoutProps<T>): J
 
     return (
         <>
-            {columns.map((column) => {
-                if (column === undefined) return <></>;
-                const { columnsModel, columnsRatios, columnsGaps } = column;
+            {columns.map((columnParent, columnParentIndex) => {
+                if (columnParent === undefined) return <></>;
+                const { columnsModel, columnsRatios, columnsGaps } = columnParent;
                 return columnsModel.map((column, columnIndex) => (
                     <ColumnContainerRenderer
-                        key={`column-${columnIndex}`}
+                        key={`column-${columnParentIndex}-${columnIndex}`}
                         layoutOptions={layoutOptions}
                         columnIndex={columnIndex}
                         columnsCount={columnsModel.length}
