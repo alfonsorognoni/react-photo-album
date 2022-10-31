@@ -30,48 +30,42 @@ const ColumnsLayout = <T extends Photo = Photo>(props: ColumnsLayoutProps<T>): J
     const columns = useMemo(() => {
         const chunks = pagination?.length ? chunkPhotos(photos, pagination) : [photos];
         return chunks.reduce((acc, photos) => {
-            const columnsLayout = computeColumnsLayout<T>({
-                photos,
-                layoutOptions,
-                instrumentation,
-            });
-            return {
-                columnsModel: [...(acc?.columnsModel as []), ...(columnsLayout?.columnsModel || [])],
-                columnsRatios: [...(acc?.columnsRatios as []), ...(columnsLayout?.columnsRatios as [])],
-                columnsGaps: [...(acc?.columnsGaps as []), ...(columnsLayout?.columnsGaps as [])],
-            };
-        }, {} as ColumnsLayoutModel<T>);
+            const columns = computeColumnsLayout({ photos, layoutOptions, instrumentation });
+            return [...(acc as []), columns];
+        }, [] as ColumnsLayoutModel<T>[]);
     }, [pagination, photos, layoutOptions, instrumentation]);
 
-    if (columns === undefined) return <></>;
-
-    const { columnsModel, columnsRatios, columnsGaps } = columns;
+    if (!columns.length) return <></>;
 
     return (
         <>
-            {columnsModel.map((column, columnIndex) => (
-                <ColumnContainerRenderer
-                    key={`column-${columnIndex}`}
-                    layoutOptions={layoutOptions}
-                    columnIndex={columnIndex}
-                    columnsCount={columnsModel.length}
-                    columnsGaps={columnsGaps}
-                    columnsRatios={columnsRatios}
-                    renderColumnContainer={renderColumnContainer}
-                    columnContainerProps={componentsProps?.columnContainerProps}
-                >
-                    {column.map(({ photo, layout }) => (
-                        <PhotoRenderer
-                            key={photo.key || photo.src}
-                            photo={photo}
-                            layout={layout}
-                            layoutOptions={layoutOptions}
-                            renderPhoto={renderPhoto}
-                            imageProps={componentsProps?.imageProps}
-                        />
-                    ))}
-                </ColumnContainerRenderer>
-            ))}
+            {columns.map((column) => {
+                if (column === undefined) return <></>;
+                const { columnsModel, columnsRatios, columnsGaps } = column;
+                return columnsModel.map((column, columnIndex) => (
+                    <ColumnContainerRenderer
+                        key={`column-${columnIndex}`}
+                        layoutOptions={layoutOptions}
+                        columnIndex={columnIndex}
+                        columnsCount={columnsModel.length}
+                        columnsGaps={columnsGaps}
+                        columnsRatios={columnsRatios}
+                        renderColumnContainer={renderColumnContainer}
+                        columnContainerProps={componentsProps?.columnContainerProps}
+                    >
+                        {column.map(({ photo, layout }) => (
+                            <PhotoRenderer
+                                key={photo.key || photo.src}
+                                photo={photo}
+                                layout={layout}
+                                layoutOptions={layoutOptions}
+                                renderPhoto={renderPhoto}
+                                imageProps={componentsProps?.imageProps}
+                            />
+                        ))}
+                    </ColumnContainerRenderer>
+                ));
+            })}
         </>
     );
 };
