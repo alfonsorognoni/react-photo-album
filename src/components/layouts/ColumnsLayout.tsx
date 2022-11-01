@@ -52,6 +52,7 @@ const ColumnsLayout = <T extends Photo = Photo>(props: ColumnsLayoutProps<T>): J
                         columnsRatios={columnsRatios}
                         renderColumnContainer={renderColumnContainer}
                         columnContainerProps={componentsProps?.columnContainerProps}
+                        pagination={pagination}
                     >
                         {column.map(({ photo, layout }) => (
                             <PhotoRenderer

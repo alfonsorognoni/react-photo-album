@@ -218,6 +218,7 @@ export type ColumnContainerProps<T extends Photo = Photo> = {
     columnsRatios?: number[];
     /** pre-populated default column container attributes */
     columnContainerProps: HTMLAttributes<HTMLDivElement>;
+    pagination?: PaginationSliceProps;
 };
 
 export type RenderColumnContainer<T extends Photo = Photo> = (

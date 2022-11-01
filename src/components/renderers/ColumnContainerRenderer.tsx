@@ -10,10 +10,10 @@ const defaultRenderColumnContainer = <T extends Photo = Photo>({
 }: PropsWithChildren<ColumnContainerProps<T>>) => <div {...columnContainerProps}>{children}</div>;
 
 const cssWidth = <T extends Photo = Photo>(props: ColumnContainerRendererProps<T>) => {
-    const { layoutOptions, columnIndex, columnsCount, columnsGaps, columnsRatios } = props;
+    const { layoutOptions, columnIndex, columnsCount, columnsGaps, columnsRatios, pagination } = props;
     const { layout, spacing, padding } = layoutOptions;
 
-    if (layout === "masonry" || !columnsGaps || !columnsRatios) {
+    if (layout === "masonry" || !columnsGaps || !columnsRatios || pagination?.length) {
         return `calc((100% - ${spacing * (columnsCount - 1)}px) / ${columnsCount})`;
     }
 
